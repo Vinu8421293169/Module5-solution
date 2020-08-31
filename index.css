@@ -1,0 +1,22 @@
+#game-container {
+  margin: 10px;
+}
+
+.col1 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+  height: 50px;
+  border: 1px solid black;
+  width: 50px;
+  border-radius: 5px;
+}
+.hide {
+  display: none;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+}
