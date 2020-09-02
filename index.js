@@ -1,12 +1,14 @@
 let turn = 0;
 let players = [];
 let gameOver = false;
-
-let board = [
-  ["", "", ""],
-  ["", "", ""],
-  ["", "", ""]
-];
+let dimension = 3;
+document
+  .getElementById("dimension")
+  .addEventListener(
+    "change",
+    (event) => (dimension = parseInt(event.target.value))
+  );
+let board = [];
 
 const startGame = () => {
   let input1 = document.getElementById("p1");
@@ -24,16 +26,21 @@ const startGame = () => {
   input2.setAttribute("disabled", true);
 
   let game = document.getElementById("game-container");
+  let name = document.getElementById("name");
+  name.classList.add("hide");
   game.classList.remove("hide");
 
   players.push(player1);
   players.push(player2);
 
   document.getElementById("turn").innerHTML = player1 + "'s turn";
+
+  initGame(dimension);
 };
 
 const calculateWinner = () => {
-  if (turn < 4) {
+  let len = board.length;
+  if (turn < len) {
     return false;
   }
 
@@ -49,9 +56,7 @@ const calculateWinner = () => {
   ];
 
   for (let i = 0; i < winnerCombinations.length; i++) {
-    let val1 = winnerCombinations[i][0];
-    let val2 = winnerCombinations[i][1];
-    let val3 = winnerCombinations[i][2];
+    let [val1, val2, val3] = winnerCombinations[i];
 
     if (
       board[val1[0]][val1[1]] !== "" &&
@@ -64,17 +69,15 @@ const calculateWinner = () => {
   return false;
 };
 
-const handleClick = (el) => {
+const handleClick = (event, i, j) => {
+  const el = event.target;
   if (el.innerHTML !== "" || gameOver) {
     return;
   }
 
-  let id = el.id;
-  let i = parseInt(id[0]);
-  let j = parseInt(id[1]);
-
   board[i][j] = turn % 2 === 0 ? "X" : "O";
   el.innerHTML = board[i][j];
+  el.classList.add(turn % 2 === 0 ? "color1" : "color2");
 
   if (calculateWinner()) {
     alert(players[turn % 2] + " is won");
@@ -83,13 +86,32 @@ const handleClick = (el) => {
   }
   turn++;
 
-  if (turn === 9) {
+  if (turn === dimension * dimension) {
     alert("Game is drown");
     gameOver = true;
     return;
   }
 
   document.getElementById("turn").innerHTML = players[turn % 2] + "'s turn";
+};
+
+const initGame = (dimension) => {
+  let gameContainer = document.getElementById("game-container");
+  for (let i = 0; i < dimension; i++) {
+    let arr = [];
+    let row = document.createElement("div");
+    row.className = "row";
+    for (let j = 0; j < dimension; j++) {
+      let cell = document.createElement("div");
+      cell.setAttribute("id", i.toString() + j.toString());
+      cell.addEventListener("click", (event) => handleClick(event, i, j));
+      cell.className = "cell";
+      row.appendChild(cell);
+      arr.push("");
+    }
+    board.push(arr);
+    gameContainer.appendChild(row);
+  }
 };
 
 const isEmpty = (value) => !value || !value.trim();
