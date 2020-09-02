@@ -19,6 +19,10 @@
   background-color: #4c5b5c;
 }
 
+svg {
+  max-width: 100%;
+}
+
 h1 {
   font-size: calc(20px + 18vh);
   line-height: calc(20px + 20vh);
